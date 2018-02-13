@@ -81,6 +81,14 @@ class Hand:
 
         return []
 
+    def get_score(self):
+        soft = self.calculate_soft()
+        hard = self.calculate_hard()
+        try:
+            return max([s for s in [soft, hard] if s < 22])
+        except:
+            return 0
+
     def __str__(self):
         out = ''
         soft = self.calculate_soft()

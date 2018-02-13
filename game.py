@@ -77,17 +77,38 @@ while(player.balance > 0):
                 for index, hand in enumerate(player.hands):
                     hand_no = index + 1
                     print('Hand {}: {}'.format(hand_no, hand))
-        # write an option parser function
-        # apply option [hit, stand, split, double]
-        # update hand definition to set hand as finalized
-        # after drawing a card causes blackjack or total bust
 
     # apply house strategy
-    # compare the results of house and players hands
-    # filter out everything above 21, get highest of softs and hards
-    # print who won
-    # reset and shuffle deck
-    # reset player stake and insurance
+    while(not house_hand.is_finalized()):
+        house_soft = house_hand.calculate_soft()
+        score = house_hand.get_score()
+        if (house_soft == 17):
+            house_hand.stand()
+            print('House stands')
+        elif (score < 17):
+            new_card2 = deck.pick()
+            print('House picked new card {}'.format(new_card2.card))
+            house_hand.dealt_card(new_card2)
+        else:
+            house_hand.stand()
 
+    print('\nHouse Hand: {}'.format(house_hand))
+    print('You hold:')
+    player_total = []
+    for index, hand in enumerate(player.hands):
+        score = hand.get_score()
+        player_total.append(score)
+        hand_no = index + 1
+        print('Hand {}: {}'.format(hand_no, hand))
 
+    player_final = max(player_total)
+    house_final = house_hand.get_score()
+    if (player_final == house_final):
+        print('ROUND END: It is a TIE')
+    elif (player_final > house_final):
+        print('ROUND END: {} wins!'.format(user))
+    elif (player_final < house_final):
+        print('ROUND END: House wins!')
 
+    deck.reset()
+    deck.shuffle()
